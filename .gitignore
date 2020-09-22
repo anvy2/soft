@@ -3,4 +3,6 @@ theme.zip
 projecttable.sql
 view.zip
 api/node_modules
+api/yarn.lock
 view/node_modules
+view/yarn.lock
