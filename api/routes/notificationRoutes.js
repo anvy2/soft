@@ -1,6 +1,6 @@
 const express = require('express');
 const router = new express.Router();
-const notifications = require('../Models/models');
+const Notifications = require('../Models/models/models');
 
 router.get('/getnotifications', async (req, res) => {
   const id = req.body.id;
@@ -40,7 +40,7 @@ router.get('/getnotifications', async (req, res) => {
 router.get('/send/notification', async (req, res) => {
   const data = req.data;
   try {
-    const notif = await notifications.create({
+    const notif = await Notifications.create({
       ...data,
       status: 0,
     });
