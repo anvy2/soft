@@ -1,7 +1,5 @@
 const express = require('express');
 const router = new express.Router();
-const sequelize = require('../config');
-const Sequelize = require('sequelize');
 const { Notifications } = require('../Models/dbmodels');
 
 router.get('/notifications', async (req, res) => {
@@ -39,15 +37,15 @@ router.get('/notifications', async (req, res) => {
     });
   }
 });
-
-router.get('/send/notification', async (req, res) => {
-  const data = req.data;
+// localhost:8000/api/send/notification
+router.post('/send/notification', async (req, res) => {
+  const data = req.body;
   try {
     await Notifications.create({
       ...data,
       status: 0,
     });
-    res.send({ status: true });
+    return res.send({ status: true });
   } catch (err) {
     res.send({
       status: false,
