@@ -1,12 +1,14 @@
 const express = require('express');
 const router = new express.Router();
-const Notifications = require('../Models/models/models');
+const sequelize = require('../config');
+const Sequelize = require('sequelize');
+const { Notifications } = require('../Models/dbmodels');
 
-router.get('/getnotifications', async (req, res) => {
+router.get('/notifications', async (req, res) => {
   const id = req.body.id;
-  console.log(notifications);
+  console.log(Notifications);
   try {
-    const data = await notifications.findAll({
+    const data = await Notifications.findAll({
       attributes: [
         'user_to',
         'user_from',
@@ -30,6 +32,7 @@ router.get('/getnotifications', async (req, res) => {
       data,
     });
   } catch (err) {
+    console.log(err);
     res.json({
       status: false,
       message: 'Something went wrong!',
@@ -40,7 +43,7 @@ router.get('/getnotifications', async (req, res) => {
 router.get('/send/notification', async (req, res) => {
   const data = req.data;
   try {
-    const notif = await Notifications.create({
+    await Notifications.create({
       ...data,
       status: 0,
     });

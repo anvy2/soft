@@ -5,11 +5,12 @@ require('dotenv').config();
 var cors = require('cors');
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
-const expressValidators = require('express-validator');
+// const expressValidators = require('express-validator');
 const commonRoutes = require('./routes/commonRoutes');
 const userRoutes = require('./routes/userRoutes');
-const fellowshipRoutes = require('./routes/fellowshipRoutes');
+// const fellowshipRoutes = require('./routes/fellowshipRoutes');
 const notificationRoutes = require('./routes/notificationRoutes');
+const noticeRoutes = require('./routes/noticeRoutes');
 // middilewares
 app.use(bodyParser.json());
 app.use(cookieParser());
@@ -29,6 +30,7 @@ console.log(process.env.JWT_SECRET);
 app.use('/api', userRoutes);
 app.use('/api', commonRoutes);
 app.use('/api', notificationRoutes);
+app.use('/api', noticeRoutes);
 
 // app.use("/api", fellowshipRoutes);
 

@@ -2,33 +2,34 @@
 
 module.exports = function (sequelize, DataTypes) {
   return sequelize.define(
-    'notice_gen_emp',
+    'notice_group',
     {
-      notice_id: {
-        type: DataTypes.UUID,
+      group_id: {
+        type: DataTypes.STRING(65),
         allowNull: false,
         primaryKey: true,
         comment: 'null',
       },
-      notice_cat: {
-        type: DataTypes.STRING(20),
-        allowNull: false,
-        comment: 'null',
-      },
-      dept_id: {
+      created_by: {
         type: DataTypes.STRING(11),
         allowNull: false,
         primaryKey: true,
         comment: 'null',
       },
-      emp_auth_id: {
-        type: DataTypes.STRING(10),
+      user_id: {
+        type: DataTypes.STRING(11),
+        allowNull: false,
+        primaryKey: true,
+        comment: 'null',
+      },
+      date_of_creation: {
+        type: DataTypes.DATEONLY,
         allowNull: false,
         comment: 'null',
       },
     },
     {
-      tableName: 'notice_gen_emp',
+      tableName: 'notice_group',
       timestamps: false,
     }
   );

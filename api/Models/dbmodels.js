@@ -15,10 +15,7 @@ const StudentsCircular = require('./models/circular_general')(
   sequelize,
   Sequelize
 );
-const CircularGroups = require('./models/circular_group_id')(
-  sequelize,
-  Sequelize
-);
+
 const IndividualsCircular = require('./models/circular_individuals')(
   sequelize,
   Sequelize
@@ -32,8 +29,8 @@ const CircularDetails = require('./models/info_circular_details')(
   sequelize,
   Sequelize
 );
-const Groups = require('./models/info_group_global')(sequelize, Sequelize);
-const NoticeDetail = require('./models/info_notice_details')(
+const UserGroupMap = require('./models/group_user_id')(sequelize, Sequelize);
+const NoticeDetails = require('./models/info_notice_details')(
   sequelize,
   Sequelize
 );
@@ -49,8 +46,8 @@ const EmployeeNotices = require('./models/notice_gen_emp')(
   Sequelize
 );
 const StudentNotices = require('./models/notice_general')(sequelize, Sequelize);
-const NoticeGroups = require('./models/notice_group')(sequelize, Sequelize);
-const NoticeGroupMap = require('./models/notice_group_id')(
+const GroupInfo = require('./models/group_info')(sequelize, Sequelize);
+const NoticeGroupMap = require('./models/notice_groups_id')(
   sequelize,
   Sequelize
 );
@@ -72,13 +69,13 @@ module.exports = {
   StudentNotices,
   CircularDetails,
   CircularArchive,
-  CircularGroups,
-  Groups,
-  NoticeDetail,
+  Courses,
+  UserGroupMap,
+  GroupInfo,
+  NoticeDetails,
   NoticeArchive,
   User,
   NoticeGroupMap,
-  NoticeGroups,
   AuthTypes,
   UserDetails,
 };
