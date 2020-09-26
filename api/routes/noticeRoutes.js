@@ -5,6 +5,7 @@ const {
   UserGroupMap,
   NoticeGroupMap,
   NoticeDetails,
+  Permissions,
 } = require('../Models/dbmodels');
 
 router.get('/notices', async (req, res) => {
@@ -75,14 +76,56 @@ router.get('/notices', async (req, res) => {
 
 router.post('/send/notice', async (req, res) => {
   const data = req.body;
+  console.log(data, data.auth_id);
+  if (!data.auth_id) {
+    return res
+      .status(400)
+      .send({ status: false, message: 'Unauthorized action' });
+  }
+  const permissions = await Permissions.findAll({
+    attributes: ['status'],
+    where: {
+      auth_id: data.auth_id,
+      submenu2: 'POST',
+      submenu3: 'Notice',
+    },
+  });
+  // res.send(permissions);
+  if (permissions.length === 0) {
+    return res
+      .status(400)
+      .send({ status: false, message: 'Unauthorized action' });
+  } else if (permissions[0].status == 'N') {
+    return res
+      .status(400)
+      .send({ status: false, message: 'Unauthorized action' });
+  }
+  let notice = null;
+  const notice_details = {
+    notice_no: data.notice_no,
+    notice_cat: data.notice_cat,
+    notice_sub: data.notice_sub,
+    notice_path: data.notice_path,
+    issued_by: data.issued_by,
+    auth_id: data.auth_id,
+    posted_on: new Date().toLocaleString().slice(0, 19).replace('T', ' '),
+    last_date: data.last_date,
+    modification_value: 0,
+  };
   try {
-    const notice = await NoticeDetails.create({
-      ...data,
-      modification_value: 0,
+    notice = await NoticeDetails.create({
+      ...notice_details,
     });
-
+    await NoticeGroupMap.create({
+      notice_id: notice.notice_id,
+      group_id: data.group_id,
+      created_by: data.auth_id,
+    });
     return res.send({ status: true });
   } catch (err) {
+    if (notice) {
+      await notice.destroy();
+    }
     return res
       .status(500)
       .send({ status: false, message: 'Something went wrong' });

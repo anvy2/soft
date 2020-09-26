@@ -56,6 +56,7 @@ const IndividualNotice = require('./models/notice_individuals')(
   Sequelize
 );
 const User = require('./models/users')(sequelize, Sequelize);
+const Permissions = require('./models/auth_menu_detail')(sequelize, Sequelize);
 
 module.exports = {
   Notifications,
@@ -78,4 +79,5 @@ module.exports = {
   NoticeGroupMap,
   AuthTypes,
   UserDetails,
+  Permissions,
 };
