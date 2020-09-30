@@ -1,6 +1,10 @@
 const express = require('express');
 const router = express.Router();
 const { Op } = require('sequelize');
+const multer = require('multer');
+const filter = require('./helper');
+const path = require('path');
+const { v4: uuidv4 } = require('uuid');
 const {
   UserGroupMap,
   NoticeGroupMap,
@@ -8,6 +12,17 @@ const {
   Permissions,
   IndividualNotice,
 } = require('../Models/dbmodels');
+
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, path.join(process.cwd(), 'assets', 'noticess'));
+  },
+  filename: (req, file, callback) => {
+    callback(null, file.fieldname + '-' + `${uuidv4()}`);
+  },
+});
+
+const upload = multer({ storage: storage, fileFilter: filter });
 
 router.get('/get/notices', async (req, res) => {
   const data = req.body;
@@ -81,7 +96,7 @@ router.get('/get/notices', async (req, res) => {
   }
 });
 
-router.post('/send/notice', async (req, res) => {
+router.post('/send/notice', upload.single('file'), async (req, res) => {
   const data = req.body;
   console.log(data, data.auth_id);
   if (!data.auth_id) {
@@ -112,7 +127,7 @@ router.post('/send/notice', async (req, res) => {
     notice_no: data.notice_no,
     notice_cat: data.notice_cat,
     notice_sub: data.notice_sub,
-    notice_path: data.notice_path,
+    notice_path: req.file.path,
     issued_by: data.issued_by,
     auth_id: data.auth_id,
     posted_on: new Date().toLocaleString().slice(0, 19).replace('T', ' '),

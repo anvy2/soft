@@ -2,6 +2,10 @@
 const express = require('express');
 const router = express.Router();
 const { Op } = require('sequelize');
+// const fs = require('path');
+const multer = require('multer');
+const filter = require('./helper');
+const { v4: uuidv4 } = require('uuid');
 const {
   UserGroupMap,
   CirculareGroupMap,
@@ -9,6 +13,17 @@ const {
   Permissions,
   IndividualCircular,
 } = require('../Models/dbmodels');
+
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, path.join(process.cwd(), 'assets', 'circulars'));
+  },
+  filename: (req, file, callback) => {
+    callback(null, file.fieldname + '-' + `${uuidv4()}`);
+  },
+});
+
+const upload = multer({ storage: storage, fileFilter: filter });
 
 router.get('/get/circulars', async (req, res) => {
   const data = req.body;
@@ -80,7 +95,7 @@ router.get('/get/circulars', async (req, res) => {
   }
 });
 
-router.post('/send/circular', async (req, res) => {
+router.post('/send/circular', upload.single('file'), async (req, res) => {
   const data = req.body;
   console.log(data, data.auth_id);
   if (!data.auth_id) {
@@ -111,7 +126,7 @@ router.post('/send/circular', async (req, res) => {
     circular_no: data.circular_no,
     circular_cat: data.circular_cat,
     circular_sub: data.circular_sub,
-    circular_path: data.circular_path,
+    circular_path: req.file.path,
     issued_by: data.issued_by,
     auth_id: data.auth_id,
     posted_on: new Date().toLocaleString().slice(0, 19).replace('T', ' '),
