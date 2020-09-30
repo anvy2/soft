@@ -6,3 +6,5 @@ api/node_modules
 api/yarn.lock
 view/node_modules
 view/yarn.lock
+.idea
+.vscode
