@@ -38,7 +38,7 @@ router.get('/get/circulars', async (req, res) => {
         [Op.or]: groups,
       },
     });
-    const individual = await IndividualsCircular.findAll({
+    const individual = await IndividualCircular.findAll({
       attributes: ['circular_id'],
       where: {
         user_id: data.user_id,
