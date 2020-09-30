@@ -127,7 +127,7 @@ router.post('/send/notice', upload.single('file'), async (req, res) => {
     notice_no: data.notice_no,
     notice_cat: data.notice_cat,
     notice_sub: data.notice_sub,
-    notice_path: req.file.path,
+    notice_path: req.file?.path,
     issued_by: data.issued_by,
     auth_id: data.auth_id,
     posted_on: new Date().toLocaleString().slice(0, 19).replace('T', ' '),

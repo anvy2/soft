@@ -126,7 +126,7 @@ router.post('/send/circular', upload.single('file'), async (req, res) => {
     circular_no: data.circular_no,
     circular_cat: data.circular_cat,
     circular_sub: data.circular_sub,
-    circular_path: req.file.path,
+    circular_path: req.file?.path,
     issued_by: data.issued_by,
     auth_id: data.auth_id,
     posted_on: new Date().toLocaleString().slice(0, 19).replace('T', ' '),
