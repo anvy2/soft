@@ -8,3 +8,6 @@ view/node_modules
 view/yarn.lock
 .idea
 .vscode
+/api/assets/circulars/*
+/api/assets/notices/*
+/api/assets/forms/*

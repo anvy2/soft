@@ -5,4 +5,4 @@ const imageFilter = function (req, file, cb) {
   }
   cb(null, true);
 };
-exports.imageFilter = imageFilter;
+module.exports = imageFilter;

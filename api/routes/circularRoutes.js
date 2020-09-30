@@ -4,7 +4,7 @@ const router = express.Router();
 const { Op } = require('sequelize');
 const path = require('path');
 const multer = require('multer');
-// const filter = require('./helper');
+const filter = require('./helper');
 const { v4: uuidv4 } = require('uuid');
 const {
   UserGroupMap,
@@ -21,12 +21,15 @@ const storage = multer.diskStorage({
   filename: (req, file, callback) => {
     callback(
       null,
-      file.fieldname + '-' + `${uuidv4()}` + path.extname(file.originalname)
+      path.basename(file.originalname, path.extname(file.originalname)) +
+        '-' +
+        `${uuidv4()}` +
+        path.extname(file.originalname)
     );
   },
 });
 
-const upload = multer({ storage: storage });
+const upload = multer({ storage: storage, fileFilter: filter });
 
 router.get('/get/circulars', async (req, res) => {
   const data = req.body;
