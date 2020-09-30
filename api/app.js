@@ -1,4 +1,4 @@
-var http = require('http');
+// var http = require('http');
 const express = require('express');
 const app = express();
 require('dotenv').config();
@@ -11,7 +11,9 @@ const userRoutes = require('./routes/userRoutes');
 // const fellowshipRoutes = require('./routes/fellowshipRoutes');
 const notificationRoutes = require('./routes/notificationRoutes');
 const noticeRoutes = require('./routes/noticeRoutes');
+const circularRoutes = require('./routes/circularRoutes');
 // middilewares
+
 app.use(bodyParser.json());
 app.use(cookieParser());
 app.use(cors());
@@ -21,6 +23,7 @@ app.use(
   })
 );
 app.use(bodyParser.json());
+app.use('/assets', express.static('assets'));
 console.log(process.env.JWT_SECRET);
 
 //app.use(expressValidators());
@@ -29,10 +32,7 @@ console.log(process.env.JWT_SECRET);
 
 app.use('/api', userRoutes);
 app.use('/api', commonRoutes);
-app.use('/api', notificationRoutes);
-app.use('/api', noticeRoutes);
-
-// app.use("/api", fellowshipRoutes);
+app.use('/api', notificationRoutes, noticeRoutes, circularRoutes);
 
 const port = process.env.PORT || 8000;
 

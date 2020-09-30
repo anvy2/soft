@@ -15,10 +15,13 @@ const {
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, path.join(process.cwd(), 'assets', 'noticess'));
+    cb(null, path.join('assets', 'notices'));
   },
   filename: (req, file, callback) => {
-    callback(null, file.fieldname + '-' + `${uuidv4()}`);
+    callback(
+      null,
+      file.fieldname + '-' + `${uuidv4()}` + path.extname(file.originalname)
+    );
   },
 });
 
@@ -123,11 +126,15 @@ router.post('/send/notice', upload.single('file'), async (req, res) => {
       .send({ status: false, message: 'Unauthorized action' });
   }
   let notice = null;
+  let notice_path = null;
+  if (!req.file) {
+    notice_path = `${process.env.SERVER_URL}/req.file?.path`;
+  }
   const notice_details = {
     notice_no: data.notice_no,
     notice_cat: data.notice_cat,
     notice_sub: data.notice_sub,
-    notice_path: req.file?.path,
+    notice_path,
     issued_by: data.issued_by,
     auth_id: data.auth_id,
     posted_on: new Date().toLocaleString().slice(0, 19).replace('T', ' '),

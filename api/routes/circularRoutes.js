@@ -2,9 +2,9 @@
 const express = require('express');
 const router = express.Router();
 const { Op } = require('sequelize');
-// const fs = require('path');
+const path = require('path');
 const multer = require('multer');
-const filter = require('./helper');
+// const filter = require('./helper');
 const { v4: uuidv4 } = require('uuid');
 const {
   UserGroupMap,
@@ -16,14 +16,17 @@ const {
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, path.join(process.cwd(), 'assets', 'circulars'));
+    cb(null, path.join('assets', 'circulars'));
   },
   filename: (req, file, callback) => {
-    callback(null, file.fieldname + '-' + `${uuidv4()}`);
+    callback(
+      null,
+      file.fieldname + '-' + `${uuidv4()}` + path.extname(file.originalname)
+    );
   },
 });
 
-const upload = multer({ storage: storage, fileFilter: filter });
+const upload = multer({ storage: storage });
 
 router.get('/get/circulars', async (req, res) => {
   const data = req.body;
@@ -97,7 +100,11 @@ router.get('/get/circulars', async (req, res) => {
 
 router.post('/send/circular', upload.single('file'), async (req, res) => {
   const data = req.body;
-  console.log(data, data.auth_id);
+  console.log(req.file.path);
+  if (!req.body) {
+    return res.status(400).end();
+  }
+  //   console.log(data, data.auth_id);
   if (!data.auth_id) {
     return res
       .status(400)
@@ -122,11 +129,15 @@ router.post('/send/circular', upload.single('file'), async (req, res) => {
       .send({ status: false, message: 'Unauthorized action' });
   }
   let circular = null;
+  let circular_path = null;
+  if (!req.file) {
+    circular_path = `${process.env.SERVER_URL}/req.file?.path`;
+  }
   const circular_details = {
     circular_no: data.circular_no,
     circular_cat: data.circular_cat,
     circular_sub: data.circular_sub,
-    circular_path: req.file?.path,
+    circular_path,
     issued_by: data.issued_by,
     auth_id: data.auth_id,
     posted_on: new Date().toLocaleString().slice(0, 19).replace('T', ' '),
