@@ -7,6 +7,7 @@ const {
   CirculareGroupMap,
   CircularDetails,
   Permissions,
+  IndividualCircular,
 } = require('../Models/dbmodels');
 
 router.get('/get/circulars', async (req, res) => {
@@ -31,12 +32,19 @@ router.get('/get/circulars', async (req, res) => {
   }
   let circular_ids;
   try {
-    circular_ids = await CirculareGroupMap.findAll({
+    const circular_id = await CirculareGroupMap.findAll({
       attributes: ['circular_id'],
       where: {
         [Op.or]: groups,
       },
     });
+    const individual = await IndividualsCircular.findAll({
+      attributes: ['circular_id'],
+      where: {
+        user_id: data.user_id,
+      },
+    });
+    circular_ids = circular_id.concat(individual);
     if (circular_ids.length === 0) {
       return res.send({ status: true, data: {} });
     }

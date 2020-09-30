@@ -6,6 +6,7 @@ const {
   NoticeGroupMap,
   NoticeDetails,
   Permissions,
+  IndividualNotice,
 } = require('../Models/dbmodels');
 
 router.get('/get/notices', async (req, res) => {
@@ -30,15 +31,21 @@ router.get('/get/notices', async (req, res) => {
   }
   let notices_ids;
   try {
-    notices_ids = await NoticeGroupMap.findAll({
-      attributes: ['notice_id', 'group_id', 'created_by'],
+    const notices_id = await NoticeGroupMap.findAll({
+      attributes: ['notice_id'],
       where: {
         group_id: {
           [Op.or]: groups,
         },
       },
     });
-
+    const individual = await IndividualNotice.findAll({
+      attributes: ['notice_id'],
+      where: {
+        user_id: data.user_id,
+      },
+    });
+    notices_ids = notices_id.concat(individual);
     if (notices_ids.length === 0) {
       return res.send({ status: true, data: {} });
     }

@@ -16,7 +16,7 @@ const StudentsCircular = require('./models/circular_general')(
   Sequelize
 );
 
-const IndividualsCircular = require('./models/circular_individuals')(
+const IndividualCircular = require('./models/circular_individuals')(
   sequelize,
   Sequelize
 );
@@ -66,7 +66,7 @@ const Permissions = require('./models/auth_menu_detail')(sequelize, Sequelize);
 module.exports = {
   Notifications,
   IndividualNotice,
-  IndividualsCircular,
+  IndividualCircular,
   Departments,
   Branches,
   EmployeeCirculars,
