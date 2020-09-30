@@ -1,14 +1,15 @@
+/* eslint-disable no-undef */
 const express = require('express');
 const router = express.Router();
 const { Op } = require('sequelize');
 const {
   UserGroupMap,
-  NoticeGroupMap,
-  NoticeDetails,
+  CirculareGroupMap,
+  CircularDetails,
   Permissions,
 } = require('../Models/dbmodels');
 
-router.get('/get/notices', async (req, res) => {
+router.get('/get/circulars', async (req, res) => {
   const data = req.body;
   let groups;
   try {
@@ -28,18 +29,15 @@ router.get('/get/notices', async (req, res) => {
       .status(500)
       .send({ status: false, message: 'Something went wrong!' });
   }
-  let notices_ids;
+  let circular_ids;
   try {
-    notices_ids = await NoticeGroupMap.findAll({
-      attributes: ['notice_id', 'group_id', 'created_by'],
+    circular_ids = await CirculareGroupMap.findAll({
+      attributes: ['circular_id'],
       where: {
-        group_id: {
-          [Op.or]: groups,
-        },
+        [Op.or]: groups,
       },
     });
-
-    if (notices_ids.length === 0) {
+    if (circular_ids.length === 0) {
       return res.send({ status: true, data: {} });
     }
   } catch (err) {
@@ -47,26 +45,26 @@ router.get('/get/notices', async (req, res) => {
       .status(500)
       .send({ status: false, message: 'Something went wrong!' });
   }
-  let notice_list;
+  let circular_list;
   try {
-    notice_list = await NoticeDetails.findAll({
+    circular_list = await CircularDetails.findAll({
       attributes: [
-        'notice_id',
-        'notice_no',
-        'notice_cat',
-        'notice_sub',
-        'notice_path',
+        'circular_id',
+        'circular_no',
+        'circular_cat',
+        'circular_sub',
+        'circular_path',
         'issued_by',
         'auth_id',
         'posted_on',
-        'last_date',
+        'valid_upto',
         'modification_value',
       ],
       where: {
-        [Op.or]: notices_ids,
+        [Op.or]: circular_ids,
       },
     });
-    return res.send({ status: true, data: notice_list });
+    return res.send({ status: true, data: circular_list });
   } catch (err) {
     return res
       .status(500)
@@ -74,7 +72,7 @@ router.get('/get/notices', async (req, res) => {
   }
 });
 
-router.post('/send/notice', async (req, res) => {
+router.post('/send/circular', async (req, res) => {
   const data = req.body;
   console.log(data, data.auth_id);
   if (!data.auth_id) {
@@ -87,7 +85,7 @@ router.post('/send/notice', async (req, res) => {
     where: {
       auth_id: data.auth_id,
       submenu2: 'POST',
-      submenu3: 'Notice',
+      submenu3: 'Circular',
     },
   });
   // res.send(permissions);
@@ -100,36 +98,35 @@ router.post('/send/notice', async (req, res) => {
       .status(400)
       .send({ status: false, message: 'Unauthorized action' });
   }
-  let notice = null;
-  const notice_details = {
-    notice_no: data.notice_no,
-    notice_cat: data.notice_cat,
-    notice_sub: data.notice_sub,
-    notice_path: data.notice_path,
+  let circular = null;
+  const circular_details = {
+    circular_no: data.circular_no,
+    circular_cat: data.circular_cat,
+    circular_sub: data.circular_sub,
+    circular_path: data.circular_path,
     issued_by: data.issued_by,
     auth_id: data.auth_id,
     posted_on: new Date().toLocaleString().slice(0, 19).replace('T', ' '),
-    last_date: data.last_date,
+    valid_upto: data.last_date,
     modification_value: 0,
   };
   try {
-    notice = await NoticeDetails.create({
-      ...notice_details,
+    circular = await CircularDetails.create({
+      ...circular_details,
     });
-    await NoticeGroupMap.create({
-      notice_id: notice.notice_id,
+    await circularGroupMap.create({
+      circular_id: circular.circular_id,
       group_id: data.group_id,
       created_by: data.auth_id,
     });
     return res.send({ status: true });
   } catch (err) {
-    if (notice) {
-      await notice.destroy();
+    if (circular === null) {
+      await circular.destroy();
     }
     return res
       .status(500)
       .send({ status: false, message: 'Something went wrong' });
   }
 });
-
 module.exports = router;

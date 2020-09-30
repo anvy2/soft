@@ -5,7 +5,7 @@ module.exports = function (sequelize, DataTypes) {
     'circular_gen_emp',
     {
       circular_id: {
-        type: DataTypes.BIGINT,
+        type: DataTypes.UUID,
         allowNull: false,
         comment: 'null',
       },

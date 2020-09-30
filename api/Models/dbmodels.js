@@ -25,6 +25,11 @@ const CircularArchive = require('./models/info_circular_archieve_details')(
   sequelize,
   Sequelize
 );
+
+const CircularGroupMap = require('./models/circular_group_id')(
+  sequelize,
+  Sequelize
+);
 const CircularDetails = require('./models/info_circular_details')(
   sequelize,
   Sequelize
@@ -80,4 +85,5 @@ module.exports = {
   AuthTypes,
   UserDetails,
   Permissions,
+  CircularGroupMap,
 };
