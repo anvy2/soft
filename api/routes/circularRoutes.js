@@ -29,7 +29,10 @@ const storage = multer.diskStorage({
   },
 });
 
-const upload = multer({ storage: storage, fileFilter: filter });
+const upload = multer({
+  storage: storage,
+  fileFilter: filter,
+});
 
 router.get('/get/circulars', async (req, res) => {
   const data = req.body;
@@ -44,12 +47,16 @@ router.get('/get/circulars', async (req, res) => {
 
     // console.log(groups);
     if (groups.length === 0) {
-      return res.send({ status: true, data: {} });
+      return res.send({
+        status: true,
+        data: {},
+      });
     }
   } catch (err) {
-    return res
-      .status(500)
-      .send({ status: false, message: 'Something went wrong!' });
+    return res.status(500).send({
+      status: false,
+      message: 'Something went wrong!',
+    });
   }
   let circular_ids;
   try {
@@ -67,14 +74,19 @@ router.get('/get/circulars', async (req, res) => {
     });
     circular_ids = circular_id.concat(individual);
     if (circular_ids.length === 0) {
-      return res.send({ status: true, data: {} });
+      return res.send({
+        status: true,
+        data: {},
+      });
     }
   } catch (err) {
-    return res
-      .status(500)
-      .send({ status: false, message: 'Something went wrong!' });
+    return res.status(500).send({
+      status: false,
+      message: 'Something went wrong!',
+    });
   }
   let circular_list;
+  const date_now = new Date().toJSON().slice(0, 10);
   try {
     circular_list = await CircularDetails.findAll({
       attributes: [
@@ -90,14 +102,23 @@ router.get('/get/circulars', async (req, res) => {
         'modification_value',
       ],
       where: {
-        [Op.or]: circular_ids,
+        circular_id: {
+          [Op.or]: circular_ids,
+        },
+        valid_upto: {
+          [Op.lte]: date_now,
+        },
       },
     });
-    return res.send({ status: true, data: circular_list });
+    return res.send({
+      status: true,
+      data: circular_list,
+    });
   } catch (err) {
-    return res
-      .status(500)
-      .send({ status: false, message: 'Something went wrong!' });
+    return res.status(500).send({
+      status: false,
+      message: 'Something went wrong!',
+    });
   }
 });
 
@@ -109,9 +130,10 @@ router.post('/send/circular', upload.single('file'), async (req, res) => {
   }
   //   console.log(data, data.auth_id);
   if (!data.auth_id) {
-    return res
-      .status(400)
-      .send({ status: false, message: 'Unauthorized action' });
+    return res.status(400).send({
+      status: false,
+      message: 'Unauthorized action',
+    });
   }
   const permissions = await Permissions.findAll({
     attributes: ['status'],
@@ -123,13 +145,15 @@ router.post('/send/circular', upload.single('file'), async (req, res) => {
   });
   // res.send(permissions);
   if (permissions.length === 0) {
-    return res
-      .status(400)
-      .send({ status: false, message: 'Unauthorized action' });
+    return res.status(400).send({
+      status: false,
+      message: 'Unauthorized action',
+    });
   } else if (permissions[0].status == 'N') {
-    return res
-      .status(400)
-      .send({ status: false, message: 'Unauthorized action' });
+    return res.status(400).send({
+      status: false,
+      message: 'Unauthorized action',
+    });
   }
   let circular = null;
   let circular_path = null;
@@ -156,14 +180,17 @@ router.post('/send/circular', upload.single('file'), async (req, res) => {
       group_id: data.group_id,
       created_by: data.auth_id,
     });
-    return res.send({ status: true });
+    return res.send({
+      status: true,
+    });
   } catch (err) {
     if (circular === null) {
       await circular.destroy();
     }
-    return res
-      .status(500)
-      .send({ status: false, message: 'Something went wrong' });
+    return res.status(500).send({
+      status: false,
+      message: 'Something went wrong',
+    });
   }
 });
 module.exports = router;

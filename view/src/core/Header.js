@@ -1,13 +1,13 @@
-import React, { Component } from "react";
-import { Link, Redirect } from "react-router-dom";
-import Sidenav from "./../core/Menu";
-import Session from "react-session-api";
-import { instanceOf } from "prop-types";
-import { connect } from "react-redux";
-import { useCookies } from "react-cookie";
-import { getNotif } from "../store/action/notification";
+import React, { Component } from 'react';
+import { Link, Redirect } from 'react-router-dom';
+import Sidenav from './../core/Menu';
+import Session from 'react-session-api';
+import { instanceOf } from 'prop-types';
+import { connect } from 'react-redux';
+import { useCookies } from 'react-cookie';
+import { getNotif } from '../store/action/notification';
 
-let photo = "";
+let photo = '';
 class Header extends Component {
   constructor(props) {
     super(props);
@@ -24,25 +24,23 @@ alert();
 };
 */
   renderNotifications = () => {
-    this.props.notif.forEach((details) => {
+    this.props.notif.map((details) => {
       return (
-        <a href={details.notice_path} className="dropdown-item">
-          <span className="dropdown-item-icon l-bg-purple text-white">
-            {/*<i className="fas fa-bell"></i>*/}
-          </span>
-          <span className="dropdown-item-desc">
+        <a href={details.notice_path} className='dropdown-item'>
+          <span className='dropdown-item-icon l-bg-purple text-white'>{/*<i className="fas fa-bell"></i>*/}</span>
+          <span className='dropdown-item-desc'>
             {details.description}
-            <span className="time">{details.rec_date}</span>
+            <span className='time'>{details.rec_date}</span>
           </span>
         </a>
       );
     });
-    console.log(this.props.notif);
+    // console.log(this.props.notif);
   };
 
   componentDidMount() {
-    const script = document.createElement("script");
-    script.src = "http://localhost:3000/assets/js/scripts.js";
+    const script = document.createElement('script');
+    script.src = 'http://localhost:3000/assets/js/scripts.js';
     script.async = true;
     document.body.appendChild(script);
     console.log(Session, localStorage);
@@ -60,242 +58,177 @@ alert();
     console.log(Session.Storage);
     return (
       <div>
-        {
-          (photo = Session.get("photopath")
-            ? Session.get("photopath")
-            : "/assets/img/user.jpg")
-        }
-        <div id="app">
-          <div className="main-wrapper main-wrapper-1">
-            <div className="navbar-bg"></div>
-            <nav className="navbar navbar-expand-lg main-navbar sticky">
-              <div className="form-inline mr-auto">
-                <ul className="navbar-nav mr-3">
+        {(photo = Session.get('photopath') ? Session.get('photopath') : '/assets/img/user.jpg')}
+        <div id='app'>
+          <div className='main-wrapper main-wrapper-1'>
+            <div className='navbar-bg'></div>
+            <nav className='navbar navbar-expand-lg main-navbar sticky'>
+              <div className='form-inline mr-auto'>
+                <ul className='navbar-nav mr-3'>
                   <li>
                     <a
-                      href="#"
-                      data-toggle="sidebar"
-                      className="nav-link nav-link-lg
-									collapse-btn"
-                    >
-                      {" "}
-                      <i data-feather="menu"></i>
+                      href='#'
+                      data-toggle='sidebar'
+                      className='nav-link nav-link-lg
+									collapse-btn'>
+                      {' '}
+                      <i data-feather='menu'></i>
                     </a>
                   </li>
                 </ul>
               </div>
-              <ul className="navbar-nav navbar-right">
+              <ul className='navbar-nav navbar-right'>
                 <li>
-                  <a href="#" className="nav-link nav-link-lg fullscreen-btn">
-                    <i data-feather="maximize"></i>
+                  <a href='#' className='nav-link nav-link-lg fullscreen-btn'>
+                    <i data-feather='maximize'></i>
                   </a>
                 </li>
-                <li className="dropdown dropdown-list-toggle">
-                  <a
-                    href="#"
-                    data-toggle="dropdown"
-                    className="nav-link nav-link-lg message-toggle"
-                  >
-                    <i data-feather="mail" className="mailAnim"></i>
-                    <span className="badge headerBadge1"></span>{" "}
+                <li className='dropdown dropdown-list-toggle'>
+                  <a href='#' data-toggle='dropdown' className='nav-link nav-link-lg message-toggle'>
+                    <i data-feather='mail' className='mailAnim'></i>
+                    <span className='badge headerBadge1'></span>{' '}
                   </a>
-                  <div className="dropdown-menu dropdown-list dropdown-menu-right pullDown">
-                    <div className="dropdown-header">
+                  <div className='dropdown-menu dropdown-list dropdown-menu-right pullDown'>
+                    <div className='dropdown-header'>
                       Messages
-                      <div className="float-right">
-                        <a href="#">Mark All As Read</a>
+                      <div className='float-right'>
+                        <a href='#'>Mark All As Read</a>
                       </div>
                     </div>
-                    <div className="dropdown-list-content dropdown-list-message">
-                      <a href="#" className="dropdown-item">
-                        {" "}
+                    <div className='dropdown-list-content dropdown-list-message'>
+                      <a href='#' className='dropdown-item'>
+                        {' '}
                         <span
-                          className="dropdown-item-avatar
-											text-white"
-                        >
-                          {" "}
-                          <img
-                            alt="image"
-                            src="assets/img/users/user-1.png"
-                            className="rounded-circle"
-                          />
-                        </span>{" "}
-                        <span className="dropdown-item-desc">
-                          {" "}
-                          <span className="message-user">John Deo</span>
-                          <span className="time messege-text">
-                            Please check your mail !!
-                          </span>
-                          <span className="time">2 Min Ago</span>
+                          className='dropdown-item-avatar
+											text-white'>
+                          {' '}
+                          <img alt='image' src='assets/img/users/user-1.png' className='rounded-circle' />
+                        </span>{' '}
+                        <span className='dropdown-item-desc'>
+                          {' '}
+                          <span className='message-user'>John Deo</span>
+                          <span className='time messege-text'>Please check your mail !!</span>
+                          <span className='time'>2 Min Ago</span>
                         </span>
-                      </a>{" "}
-                      <a href="#" className="dropdown-item">
-                        {" "}
-                        <span className="dropdown-item-avatar text-white">
-                          <img
-                            alt="image"
-                            src="assets/img/users/user-2.png"
-                            className="rounded-circle"
-                          />
-                        </span>{" "}
-                        <span className="dropdown-item-desc">
-                          {" "}
-                          <span className="message-user">Sarah Smith</span>{" "}
-                          <span className="time messege-text">
-                            Request for leave application
-                          </span>
-                          <span className="time">5 Min Ago</span>
+                      </a>{' '}
+                      <a href='#' className='dropdown-item'>
+                        {' '}
+                        <span className='dropdown-item-avatar text-white'>
+                          <img alt='image' src='assets/img/users/user-2.png' className='rounded-circle' />
+                        </span>{' '}
+                        <span className='dropdown-item-desc'>
+                          {' '}
+                          <span className='message-user'>Sarah Smith</span>{' '}
+                          <span className='time messege-text'>Request for leave application</span>
+                          <span className='time'>5 Min Ago</span>
                         </span>
-                      </a>{" "}
-                      <a href="#" className="dropdown-item">
-                        {" "}
-                        <span className="dropdown-item-avatar text-white">
-                          <img
-                            alt="image"
-                            src="assets/img/users/user-5.png"
-                            className="rounded-circle"
-                          />
-                        </span>{" "}
-                        <span className="dropdown-item-desc">
-                          {" "}
-                          <span className="message-user">Jacob Ryan</span>{" "}
-                          <span className="time messege-text">
-                            Your payment invoice is generated.
-                          </span>{" "}
-                          <span className="time">12 Min Ago</span>
+                      </a>{' '}
+                      <a href='#' className='dropdown-item'>
+                        {' '}
+                        <span className='dropdown-item-avatar text-white'>
+                          <img alt='image' src='assets/img/users/user-5.png' className='rounded-circle' />
+                        </span>{' '}
+                        <span className='dropdown-item-desc'>
+                          {' '}
+                          <span className='message-user'>Jacob Ryan</span>{' '}
+                          <span className='time messege-text'>Your payment invoice is generated.</span>{' '}
+                          <span className='time'>12 Min Ago</span>
                         </span>
-                      </a>{" "}
-                      <a href="#" className="dropdown-item">
-                        {" "}
-                        <span className="dropdown-item-avatar text-white">
-                          <img
-                            alt="image"
-                            src="assets/img/users/user-4.png"
-                            className="rounded-circle"
-                          />
-                        </span>{" "}
-                        <span className="dropdown-item-desc">
-                          {" "}
-                          <span className="message-user">Lina Smith</span>{" "}
-                          <span className="time messege-text">
-                            hii John, I have upload doc related to task.
-                          </span>{" "}
-                          <span className="time">30 Min Ago</span>
+                      </a>{' '}
+                      <a href='#' className='dropdown-item'>
+                        {' '}
+                        <span className='dropdown-item-avatar text-white'>
+                          <img alt='image' src='assets/img/users/user-4.png' className='rounded-circle' />
+                        </span>{' '}
+                        <span className='dropdown-item-desc'>
+                          {' '}
+                          <span className='message-user'>Lina Smith</span>{' '}
+                          <span className='time messege-text'>hii John, I have upload doc related to task.</span>{' '}
+                          <span className='time'>30 Min Ago</span>
                         </span>
-                      </a>{" "}
-                      <a href="#" className="dropdown-item">
-                        {" "}
-                        <span className="dropdown-item-avatar text-white">
-                          <img
-                            alt="image"
-                            src="assets/img/users/user-3.png"
-                            className="rounded-circle"
-                          />
-                        </span>{" "}
-                        <span className="dropdown-item-desc">
-                          {" "}
-                          <span className="message-user">Jalpa Joshi</span>{" "}
-                          <span className="time messege-text">
-                            Please do as specify. Let me know if you have any
-                            query.
-                          </span>{" "}
-                          <span className="time">1 Days Ago</span>
+                      </a>{' '}
+                      <a href='#' className='dropdown-item'>
+                        {' '}
+                        <span className='dropdown-item-avatar text-white'>
+                          <img alt='image' src='assets/img/users/user-3.png' className='rounded-circle' />
+                        </span>{' '}
+                        <span className='dropdown-item-desc'>
+                          {' '}
+                          <span className='message-user'>Jalpa Joshi</span>{' '}
+                          <span className='time messege-text'>
+                            Please do as specify. Let me know if you have any query.
+                          </span>{' '}
+                          <span className='time'>1 Days Ago</span>
                         </span>
-                      </a>{" "}
-                      <a href="#" className="dropdown-item">
-                        {" "}
-                        <span className="dropdown-item-avatar text-white">
-                          <img
-                            alt="image"
-                            src="assets/img/users/user-2.png"
-                            className="rounded-circle"
-                          />
-                        </span>{" "}
-                        <span className="dropdown-item-desc">
-                          {" "}
-                          <span className="message-user">Sarah Smith</span>{" "}
-                          <span className="time messege-text">
-                            Client Requirements
-                          </span>
-                          <span className="time">2 Days Ago</span>
+                      </a>{' '}
+                      <a href='#' className='dropdown-item'>
+                        {' '}
+                        <span className='dropdown-item-avatar text-white'>
+                          <img alt='image' src='assets/img/users/user-2.png' className='rounded-circle' />
+                        </span>{' '}
+                        <span className='dropdown-item-desc'>
+                          {' '}
+                          <span className='message-user'>Sarah Smith</span>{' '}
+                          <span className='time messege-text'>Client Requirements</span>
+                          <span className='time'>2 Days Ago</span>
                         </span>
                       </a>
                     </div>
-                    <div className="dropdown-footer text-center">
-                      <a href="#">
-                        View All <i className="fas fa-chevron-right"></i>
+                    <div className='dropdown-footer text-center'>
+                      <a href='#'>
+                        View All <i className='fas fa-chevron-right'></i>
                       </a>
                     </div>
                   </div>
                 </li>
-                <li className="dropdown dropdown-list-toggle">
-                  <a
-                    href="#"
-                    data-toggle="dropdown"
-                    className="nav-link notification-toggle nav-link-lg"
-                  >
-                    <i data-feather="bell"></i>
+                <li className='dropdown dropdown-list-toggle'>
+                  <a href='#' data-toggle='dropdown' className='nav-link notification-toggle nav-link-lg'>
+                    <i data-feather='bell'></i>
                   </a>
-                  <div className="dropdown-menu dropdown-list dropdown-menu-right pullDown">
-                    <div className="dropdown-header">
+                  <div className='dropdown-menu dropdown-list dropdown-menu-right pullDown'>
+                    <div className='dropdown-header'>
                       Notifications
-                      <div className="float-right">
-                        <a href="#">Mark All As Read</a>
+                      <div className='float-right'>
+                        <a href='#'>Mark All As Read</a>
                       </div>
                     </div>
-                    <div className="dropdown-list-content dropdown-list-icons">
-                      {this.renderNotifications()}
-                    </div>
-                    <div className="dropdown-footer text-center">
-                      <a href="#">
-                        View All <i className="fas fa-chevron-right"></i>
+                    <div className='dropdown-list-content dropdown-list-icons'>{this.renderNotifications()}</div>
+                    <div className='dropdown-footer text-center'>
+                      <a href='#'>
+                        View All <i className='fas fa-chevron-right'></i>
                       </a>
                     </div>
                   </div>
                 </li>
-                <li className="dropdown">
-                  <a
-                    href="#"
-                    data-toggle="dropdown"
-                    className="nav-link dropdown-toggle nav-link-lg nav-link-user"
-                  >
-                    {" "}
-                    <img
-                      alt="image"
-                      src={window.location.origin + photo}
-                      className="user-img-radious-style"
-                    />{" "}
-                    <span className="d-sm-none d-lg-inline-block"></span>
+                <li className='dropdown'>
+                  <a href='#' data-toggle='dropdown' className='nav-link dropdown-toggle nav-link-lg nav-link-user'>
+                    {' '}
+                    <img alt='image' src={window.location.origin + photo} className='user-img-radious-style' />{' '}
+                    <span className='d-sm-none d-lg-inline-block'></span>
                   </a>
-                  <div className="dropdown-menu dropdown-menu-right pullDown">
-                    <div className="dropdown-title">
-                      Hello {Session.get("username")}
-                    </div>
-                    <a href="profile.html" className="dropdown-item has-icon">
-                      {" "}
+                  <div className='dropdown-menu dropdown-menu-right pullDown'>
+                    <div className='dropdown-title'>Hello {Session.get('username')}</div>
+                    <a href='profile.html' className='dropdown-item has-icon'>
+                      {' '}
                       <i
-                        className="far
-										fa-user"
-                      ></i>{" "}
+                        className='far
+										fa-user'></i>{' '}
                       Profile
-                    </a>{" "}
-                    <a href="timeline.html" className="dropdown-item has-icon">
-                      {" "}
-                      <i className="fas fa-bolt"></i>
+                    </a>{' '}
+                    <a href='timeline.html' className='dropdown-item has-icon'>
+                      {' '}
+                      <i className='fas fa-bolt'></i>
                       Activities
-                    </a>{" "}
-                    <a href="#" className="dropdown-item has-icon">
-                      {" "}
-                      <i className="fas fa-cog"></i>
+                    </a>{' '}
+                    <a href='#' className='dropdown-item has-icon'>
+                      {' '}
+                      <i className='fas fa-cog'></i>
                       Settings
                     </a>
-                    <div className="dropdown-divider"></div>
-                    <Link
-                      to="/Logout"
-                      className="dropdown-item has-icon text-danger"
-                    >
-                      {" "}
-                      <i className="fas fa-sign-out-alt"></i>
+                    <div className='dropdown-divider'></div>
+                    <Link to='/Logout' className='dropdown-item has-icon text-danger'>
+                      {' '}
+                      <i className='fas fa-sign-out-alt'></i>
                       Logout
                     </Link>
                   </div>
@@ -312,8 +245,7 @@ const mapStateToProps = (state, ownProps) => {
   //console.log('auth token '+state.auth.token);
   return {
     token: state.auth.token | Session.Storage.token,
-    isAuthenticated:
-      state.auth.isAuthentening || Session.Storage.isAuthenticated,
+    isAuthenticated: state.auth.isAuthentening || Session.Storage.isAuthenticated,
     cookies: ownProps.cookies,
     notif: state.notif,
   };

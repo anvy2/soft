@@ -1,5 +1,7 @@
-import React, { Component } from "react";
-import Subheader from "../core/Subheader";
+import React, { Component } from 'react';
+import Subheader from '../core/Subheader';
+import CircularView from '../views/circular';
+import NoticeView from '../views/notice';
 
 class Home extends Component {
   constructor(props) {
@@ -15,6 +17,8 @@ class Home extends Component {
     return (
       <div>
         <h3>Welcome to MIS V2.0</h3>
+        <CircularView />
+        <NoticeView />
       </div>
     );
   }

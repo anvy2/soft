@@ -1,6 +1,8 @@
 const express = require('express');
 const router = new express.Router();
-const { Notifications } = require('../Models/dbmodels');
+const {
+  Notifications
+} = require('../Models/dbmodels');
 
 router.get('/notifications', async (req, res) => {
   const id = req.body.id;
@@ -45,7 +47,9 @@ router.post('/send/notification', async (req, res) => {
       ...data,
       status: 0,
     });
-    return res.send({ status: true });
+    return res.send({
+      status: true
+    });
   } catch (err) {
     res.send({
       status: false,

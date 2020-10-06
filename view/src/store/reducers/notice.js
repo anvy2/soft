@@ -1,6 +1,6 @@
 export default (state = [], action) => {
   switch (action.type) {
-    case "NOTIFICATION":
+    case 'FETCH_NOTICES':
       return action.payload;
     default:
       return state;

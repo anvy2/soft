@@ -1,29 +1,30 @@
-import React from "react";
-import ReactDOM from "react-dom";
-import App from "./App";
-import { createStore, applyMiddleware, compose, combineReducers } from "redux";
-import { Provider } from "react-redux";
-import reducer from "./store/reducers/reducer";
-import notificationReducer from "./store/reducers/notication";
-import { CookiesProvider } from "react-cookie";
-import { sessionService } from "redux-react-session";
-import * as serviceWorker from "./serviceWorker";
-import thunk from "redux-thunk";
+import React from 'react';
+import ReactDOM from 'react-dom';
+import App from './App';
+import { createStore, applyMiddleware, compose, combineReducers } from 'redux';
+import { Provider } from 'react-redux';
+import reducer from './store/reducers/reducer';
+import notificationReducer from './store/reducers/notication';
+import circularReducer from './store/reducers/circular';
+import noticeReducer from './store/reducers/notice';
+import { CookiesProvider } from 'react-cookie';
+import { sessionService } from 'redux-react-session';
+import * as serviceWorker from './serviceWorker';
+import thunk from 'redux-thunk';
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 
 const rootReducer = combineReducers({
   auth: reducer,
   notif: notificationReducer,
+  circulars: circularReducer,
+  notices: noticeReducer,
 });
 
-const store = createStore(
-  rootReducer,
-  composeEnhancers(applyMiddleware(thunk))
-);
+const store = createStore(rootReducer, composeEnhancers(applyMiddleware(thunk)));
 const options = {
   refreshOnCheckAuth: true,
-  redirectPath: "/home",
-  driver: "COOKIES",
+  redirectPath: '/home',
+  driver: 'COOKIES',
 };
 const validateSession = (session) => {
   // check if your session is still valid
@@ -31,24 +32,15 @@ const validateSession = (session) => {
 };
 sessionService
   .initSessionService(store, options, validateSession)
-  .then(() =>
-    console.log(
-      "Redux React Session is ready and a session was refreshed from your storage"
-    )
-  )
-  .catch(() =>
-    console.log(
-      "Redux React Session is ready and there is no session in your storage"
-    )
-  );
+  .then(() => console.log('Redux React Session is ready and a session was refreshed from your storage'))
+  .catch(() => console.log('Redux React Session is ready and there is no session in your storage'));
 ReactDOM.render(
   <CookiesProvider>
     <Provider store={store}>
-      {" "}
       <App />
     </Provider>
   </CookiesProvider>,
-  document.getElementById("root")
+  document.getElementById('root')
 );
 
 // If you want your app to work offline and load faster, you can change
