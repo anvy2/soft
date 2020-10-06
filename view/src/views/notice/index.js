@@ -137,10 +137,6 @@ class NoticeView extends Component {
     );
   };
 
-  onPageClick = (value) => {
-    this.setState({ page: (value - 1) * 6 });
-  };
-
   render() {
     return (
       <div>
