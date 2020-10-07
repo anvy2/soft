@@ -2,16 +2,12 @@
 const express = require('express');
 const router = express.Router();
 // const _ = require('lodash');
-const {
-  Op
-} = require('sequelize');
+const { Op } = require('sequelize');
 const fs = require('fs');
 const path = require('path');
 const multer = require('multer');
 const filter = require('./helper');
-const {
-  v4: uuidv4
-} = require('uuid');
+const { v4: uuidv4 } = require('uuid');
 const {
   UserGroupMap,
   CirculareGroupMap,
@@ -28,9 +24,9 @@ const storage = multer.diskStorage({
     callback(
       null,
       path.basename(file.originalname, path.extname(file.originalname)) +
-      '-' +
-      `${uuidv4()}` +
-      path.extname(file.originalname)
+        '-' +
+        `${uuidv4()}` +
+        path.extname(file.originalname)
     );
   },
 });
@@ -44,15 +40,12 @@ router.get('/get/circulars', async (req, res) => {
   const data = req.body;
   let groups;
   try {
-
     groups = await UserGroupMap.findAll({
       attributes: ['group_id'],
       where: {
         user_id: data.user_id,
       },
     });
-
-
 
     if (groups.length === 0) {
       return res.send({
@@ -114,7 +107,7 @@ router.get('/get/circulars', async (req, res) => {
           [Op.or]: circular_ids,
         },
         valid_upto: {
-          [Op.lte]: date_now,
+          [Op.gte]: date_now,
         },
       },
     });
@@ -205,11 +198,7 @@ router.post('/send/circular', upload.single('file'), async (req, res) => {
 router.patch('/edit/circular', upload.single('file'), async (req, res) => {
   // const user_id = req.body.user_id;
   const circular_id = req.body.circular_id;
-  const {
-    circular_no,
-    circular_cat,
-    circular_sub,
-  } = req.body;
+  const { circular_no, circular_cat, circular_sub } = req.body;
 
   const circular_path = req.file.path;
   try {
@@ -232,12 +221,12 @@ router.patch('/edit/circular', upload.single('file'), async (req, res) => {
     await details.save();
     res.send({
       status: true,
-      message: 'Changes saved!'
+      message: 'Changes saved!',
     });
   } catch (err) {
     res.status(500).send({
       status: false,
-      message: 'Something went wrong!'
+      message: 'Something went wrong!',
     });
   }
 });

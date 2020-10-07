@@ -96,6 +96,7 @@ router.get('/get/notices', async (req, res) => {
       });
   }
   let notice_list;
+  const date_now = new Date().toJSON().slice(0, 10);
   try {
     notice_list = await NoticeDetails.findAll({
       attributes: [
@@ -111,7 +112,12 @@ router.get('/get/notices', async (req, res) => {
         'modification_value',
       ],
       where: {
-        [Op.or]: notices_ids,
+        notice_id: {
+          [Op.or]: notices_ids,
+        },
+        last_date: {
+          [Op.gte]: date_now,
+        },
       },
     });
     return res.send({
