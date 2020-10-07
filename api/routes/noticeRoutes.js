@@ -1,10 +1,15 @@
 const express = require('express');
 const router = express.Router();
-const { Op } = require('sequelize');
+const fs = require('fs');
+const {
+  Op
+} = require('sequelize');
 const multer = require('multer');
 const filter = require('./helper');
 const path = require('path');
-const { v4: uuidv4 } = require('uuid');
+const {
+  v4: uuidv4
+} = require('uuid');
 const {
   UserGroupMap,
   NoticeGroupMap,
@@ -21,14 +26,17 @@ const storage = multer.diskStorage({
     callback(
       null,
       path.basename(file.originalname, path.extname(file.originalname)) +
-        '-' +
-        `${uuidv4()}` +
-        path.extname(file.originalname)
+      '-' +
+      `${uuidv4()}` +
+      path.extname(file.originalname)
     );
   },
 });
 
-const upload = multer({ storage: storage, fileFilter: filter });
+const upload = multer({
+  storage: storage,
+  fileFilter: filter
+});
 
 router.get('/get/notices', async (req, res) => {
   const data = req.body;
@@ -43,12 +51,18 @@ router.get('/get/notices', async (req, res) => {
 
     // console.log(groups);
     if (groups.length === 0) {
-      return res.send({ status: true, data: {} });
+      return res.send({
+        status: true,
+        data: {}
+      });
     }
   } catch (err) {
     return res
       .status(500)
-      .send({ status: false, message: 'Something went wrong!' });
+      .send({
+        status: false,
+        message: 'Something went wrong!'
+      });
   }
   let notices_ids;
   try {
@@ -68,12 +82,18 @@ router.get('/get/notices', async (req, res) => {
     });
     notices_ids = notices_id.concat(individual);
     if (notices_ids.length === 0) {
-      return res.send({ status: true, data: {} });
+      return res.send({
+        status: true,
+        data: {}
+      });
     }
   } catch (err) {
     return res
       .status(500)
-      .send({ status: false, message: 'Something went wrong!' });
+      .send({
+        status: false,
+        message: 'Something went wrong!'
+      });
   }
   let notice_list;
   try {
@@ -94,11 +114,17 @@ router.get('/get/notices', async (req, res) => {
         [Op.or]: notices_ids,
       },
     });
-    return res.send({ status: true, data: notice_list });
+    return res.send({
+      status: true,
+      data: notice_list
+    });
   } catch (err) {
     return res
       .status(500)
-      .send({ status: false, message: 'Something went wrong!' });
+      .send({
+        status: false,
+        message: 'Something went wrong!'
+      });
   }
 });
 
@@ -108,7 +134,10 @@ router.post('/send/notice', upload.single('file'), async (req, res) => {
   if (!data.auth_id) {
     return res
       .status(400)
-      .send({ status: false, message: 'Unauthorized action' });
+      .send({
+        status: false,
+        message: 'Unauthorized action'
+      });
   }
   const permissions = await Permissions.findAll({
     attributes: ['status'],
@@ -122,11 +151,17 @@ router.post('/send/notice', upload.single('file'), async (req, res) => {
   if (permissions.length === 0) {
     return res
       .status(400)
-      .send({ status: false, message: 'Unauthorized action' });
+      .send({
+        status: false,
+        message: 'Unauthorized action'
+      });
   } else if (permissions[0].status == 'N') {
     return res
       .status(400)
-      .send({ status: false, message: 'Unauthorized action' });
+      .send({
+        status: false,
+        message: 'Unauthorized action'
+      });
   }
   let notice = null;
   let notice_path = null;
@@ -153,14 +188,59 @@ router.post('/send/notice', upload.single('file'), async (req, res) => {
       group_id: data.group_id,
       created_by: data.auth_id,
     });
-    return res.send({ status: true });
+    return res.send({
+      status: true
+    });
   } catch (err) {
     if (notice) {
       await notice.destroy();
     }
     return res
       .status(500)
-      .send({ status: false, message: 'Something went wrong' });
+      .send({
+        status: false,
+        message: 'Something went wrong'
+      });
+  }
+});
+
+router.patch('/edit/notice', upload.single('file'), async (req, res) => {
+  // const user_id = req.body.user_id;
+  const notice_id = req.body.notice_id;
+  const {
+    notice_no,
+    notice_cat,
+    notice_sub,
+  } = req.body;
+
+  const notice_path = req.file.path;
+  try {
+    let details = await NoticeDetails.findByPk(notice_id);
+    if (notice_no !== undefined) {
+      details[0].notice_no = notice_no;
+    }
+    if (notice_cat !== undefined) {
+      details[0].notice_cat = notice_cat;
+    }
+    if (notice_sub !== undefined) {
+      details[0].notice_sub = notice_sub;
+    }
+    if (notice_path !== undefined) {
+      if (details.notice_path !== null) {
+        fs.unlink(details[0].notice_path);
+      }
+      details.notice_path = notice_no;
+    }
+    await details.save();
+    res.send({
+      status: true,
+      message: 'Changes saved!'
+    });
+  } catch (err) {
+    res.status(500).send({
+      status: false,
+      message: 'Something went wrong!'
+    });
   }
 });
 

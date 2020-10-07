@@ -1,11 +1,17 @@
 /* eslint-disable no-undef */
 const express = require('express');
 const router = express.Router();
-const { Op } = require('sequelize');
+// const _ = require('lodash');
+const {
+  Op
+} = require('sequelize');
+const fs = require('fs');
 const path = require('path');
 const multer = require('multer');
 const filter = require('./helper');
-const { v4: uuidv4 } = require('uuid');
+const {
+  v4: uuidv4
+} = require('uuid');
 const {
   UserGroupMap,
   CirculareGroupMap,
@@ -22,9 +28,9 @@ const storage = multer.diskStorage({
     callback(
       null,
       path.basename(file.originalname, path.extname(file.originalname)) +
-        '-' +
-        `${uuidv4()}` +
-        path.extname(file.originalname)
+      '-' +
+      `${uuidv4()}` +
+      path.extname(file.originalname)
     );
   },
 });
@@ -38,6 +44,7 @@ router.get('/get/circulars', async (req, res) => {
   const data = req.body;
   let groups;
   try {
+
     groups = await UserGroupMap.findAll({
       attributes: ['group_id'],
       where: {
@@ -45,7 +52,8 @@ router.get('/get/circulars', async (req, res) => {
       },
     });
 
-    // console.log(groups);
+
+
     if (groups.length === 0) {
       return res.send({
         status: true,
@@ -53,7 +61,7 @@ router.get('/get/circulars', async (req, res) => {
       });
     }
   } catch (err) {
-    return res.status(500).send({
+    return res.status(400).send({
       status: false,
       message: 'Something went wrong!',
     });
@@ -158,7 +166,7 @@ router.post('/send/circular', upload.single('file'), async (req, res) => {
   let circular = null;
   let circular_path = null;
   if (!req.file) {
-    circular_path = `${process.env.SERVER_URL}/req.file?.path`;
+    circular_path = `${req.file?.path}`;
   }
   const circular_details = {
     circular_no: data.circular_no,
@@ -190,6 +198,46 @@ router.post('/send/circular', upload.single('file'), async (req, res) => {
     return res.status(500).send({
       status: false,
       message: 'Something went wrong',
+    });
+  }
+});
+
+router.patch('/edit/circular', upload.single('file'), async (req, res) => {
+  // const user_id = req.body.user_id;
+  const circular_id = req.body.circular_id;
+  const {
+    circular_no,
+    circular_cat,
+    circular_sub,
+  } = req.body;
+
+  const circular_path = req.file.path;
+  try {
+    let details = await CircularDetails.findByPk(circular_id);
+    if (circular_no !== undefined) {
+      details[0].circular_no = circular_no;
+    }
+    if (circular_cat !== undefined) {
+      details[0].circular_cat = circular_cat;
+    }
+    if (circular_sub !== undefined) {
+      details[0].circular_sub = circular_sub;
+    }
+    if (circular_path !== undefined) {
+      if (details.circular_path !== null) {
+        fs.unlink(details.circular_path);
+      }
+      details.circular_path = circular_no;
+    }
+    await details.save();
+    res.send({
+      status: true,
+      message: 'Changes saved!'
+    });
+  } catch (err) {
+    res.status(500).send({
+      status: false,
+      message: 'Something went wrong!'
     });
   }
 });
